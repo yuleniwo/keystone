@@ -224,12 +224,21 @@ struct RISCVOperand : public MCParsedAsmOperand {
   };
 
   SMLoc StartLoc, EndLoc;
+#if defined(_MSC_VER) && (_MSC_VER < 1900) /* 1900 is vc2015 */
+  StringRef Tok;
+  union {
+    RegOp Reg;
+    ImmOp Imm;
+    struct SysRegOp SysReg;
+  };
+#else
   union {
     StringRef Tok;
     RegOp Reg;
     ImmOp Imm;
     struct SysRegOp SysReg;
   };
+#endif
 
   RISCVOperand(KindTy K) : MCParsedAsmOperand(), Kind(K) {}
 
